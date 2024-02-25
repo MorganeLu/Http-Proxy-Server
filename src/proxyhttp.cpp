@@ -10,16 +10,20 @@ void ProxyHTTP::multiRun(){
 void ProxyHTTP::run(){
     Server server(port);
     int ready = server.buildServer();
+    cout<<"starting..."<<endl;
     if(ready == EXIT_FAILURE){
         string msg = "Cannot build proxy server.";
         logger.log_message(3, 0, msg);
         exit(EXIT_FAILURE);
     }
-
+    printf("before while\n");
+    // server.connect2Client();
+    // printf("after connect");
     int client_id = -1;
     while (true) {
         std::pair<int, std::string> temp;
         temp = server.connect2Client();
+        printf("after connect");
         if(temp.first == -1){
             logger.log_message(3, -1, temp.second);
             continue;
@@ -33,6 +37,7 @@ void ProxyHTTP::run(){
         clientInfo.set_fd(client_fd);
         clientInfo.set_id(client_id);
         clientInfo.set_ip(client_ip);
+        printf("before thread\n");
 
         pthread_t thread;
         pthread_create(&thread, NULL, handle, &clientInfo);
