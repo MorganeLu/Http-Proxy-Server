@@ -1,0 +1,3 @@
+Danger log:
+
+1. About socket:
