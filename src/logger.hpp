@@ -34,7 +34,9 @@ public:
         // ID:	"REQUEST"	from	IPFROM	@	TIME
         std::string idStr = std::to_string(id);
         std::string message = idStr + ": \"" + firstLine + "\" from" + host + "@" + timeStr;
+        printf("in logger\n");
         if (m_logfile.is_open()) {
+            printf("can wirte in log\n");
             pthread_mutex_lock(&lock);
             m_logfile << message << std::endl;
             pthread_mutex_unlock(&lock);

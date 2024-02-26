@@ -10,34 +10,39 @@ void ProxyHTTP::multiRun(){
 void ProxyHTTP::run(){
     Server server(port);
     int ready = server.buildServer();
-    cout<<"starting..."<<endl;
+    // cout<<"starting..."<<endl;
     if(ready == EXIT_FAILURE){
         string msg = "Cannot build proxy server.";
         logger.log_message(3, 0, msg);
         exit(EXIT_FAILURE);
     }
-    printf("before while\n");
+    // printf("before while\n");
     // server.connect2Client();
     // printf("after connect");
     int client_id = -1;
     while (true) {
         std::pair<int, std::string> temp;
         temp = server.connect2Client();
-        printf("after connect");
+        // printf("after connect in proxy\n");
+        // cout<<temp.first<<endl;
         if(temp.first == -1){
             logger.log_message(3, -1, temp.second);
             continue;
         }
+        cout<<temp.first<<", "<<temp.second<<endl;
         int client_fd = temp.first;
         std::string client_ip = temp.second;
+        cout<<temp.first<<", "<<temp.second<<endl;
 
         client_id += 1;
 
-        ClientInfo clientInfo;
-        clientInfo.set_fd(client_fd);
-        clientInfo.set_id(client_id);
-        clientInfo.set_ip(client_ip);
-        printf("before thread\n");
+        ClientInfo clientInfo(client_fd, client_id, client_ip);
+        // clientInfo.printInfo();
+        // clientInfo.set_fd(client_fd);
+        // clientInfo.set_id(client_id);
+        // clientInfo.set_ip(client_ip);
+        cout << "******************************************"<<endl;
+        clientInfo.printInfo();
 
         pthread_t thread;
         pthread_create(&thread, NULL, handle, &clientInfo);
@@ -85,13 +90,17 @@ void * ProxyHTTP::handle(void *clientInfo){
     int requestId = client_info->get_id();
     std::string client_ip = client_info->get_ip();
 
-    std::vector<char> message;
-    int clientLen = recv(client_fd, &message.data()[0], message.size(), 0);
+    std::vector<char> message(1024 * 1024);
+    // char test[65536] = {0};
+    int clientLen = recv(client_fd, &message.data()[0], 1024*1024, 0);
+    // int clientLen = recv(client_fd, &test, sizeof(test), 0);
+    // std::cout<<test<<endl;
     if (clientLen <= 0) {
         close(client_fd);
         return NULL;
     }
     message.data()[clientLen] = '\0';
+    std::cout<<message.data()<<endl;
     string initRequest(message.begin(), message.end());
     // make Request object
     HttpRequest req(initRequest, requestId);
@@ -99,9 +108,13 @@ void * ProxyHTTP::handle(void *clientInfo){
     // time_t now = time(nullptr);
     // std::tm * utc_time = std::gmtime(&now);
     std::string firstLine = req.getFirstLine();
+    std::cout <<"firstLine***********************:"<<firstLine<<"****************"<<endl;
+    std::cout << "Host: "<<req.getHost().c_str()<<endl;
     logger.log_newRequest(requestId, firstLine, client_ip);
+    std::cout<<"after log"<<endl;
 
     if(req.getMethod() == "GET"){
+        std::cout<<"in Get"<<endl;
         getHttp(req,client_fd,requestId); ///TBD
     }else if(req.getMethod() == "POST"){
         postHttp(req,client_fd,requestId); ///TBD
@@ -122,7 +135,9 @@ void * ProxyHTTP::handle(void *clientInfo){
 
 // handle GET method
 void ProxyHTTP::getHttp(HttpRequest request, int client_fd,int requestId){
-    Client myServer(request.getHost().c_str(),request.getPort().c_str());
+    // Client myServer(request.getHost().c_str(),request.getPort().c_str());
+    Client myServer("www.httpwatch.com",request.getPort().c_str());
+    cout<<"compare length:"<<sizeof(request.getHost().c_str())<<","<<sizeof("www.httpwatch.com")<<endl;
 
     //connect to server
     myServer.buildClient();

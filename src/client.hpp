@@ -31,7 +31,7 @@ public:
         host_info.ai_socktype = SOCK_STREAM;
 
         int status;
-        cout<<"start building client"<<endl;
+        // cout<<"start building client"<<endl;
         status = getaddrinfo(hostname, port, &host_info, &host_info_list);
         if (status != 0) {
             std::cerr << "Error: cannot get address info for host" << std::endl;

@@ -24,15 +24,16 @@ private:
     int socket_fd;
 
 public:
-    Server():hostname(NULL), port("4444"){}
+    Server():hostname(NULL), port("12345"){}
     Server(const char *port):hostname(NULL), port(port){}
 
     int buildServer(){
+        memset(&host_info, 0, sizeof(host_info));
         host_info.ai_family   = AF_UNSPEC;
         host_info.ai_socktype = SOCK_STREAM;
         host_info.ai_flags    = AI_PASSIVE;
-        memset(&host_info, 0, sizeof(host_info));
-        printf("before");
+        
+        // printf("before");
 
         int status;
         status = getaddrinfo(hostname, port, &host_info, &host_info_list);
@@ -41,18 +42,18 @@ public:
             std::cerr << "  (" << hostname << "," << port << ")" << std::endl;
             return EXIT_FAILURE;
         } //if
-        printf("getaddrinfo\n");
+        // printf("getaddrinfo\n");
 
         socket_fd = socket(host_info_list->ai_family, 
                     host_info_list->ai_socktype, 
                     host_info_list->ai_protocol);
-        std::cout<<socket_fd<<std::endl;
+        // std::cout<<socket_fd<<std::endl;
         if (socket_fd == -1) {
             std::cerr << "Error: cannot create socket" << std::endl;
             std::cerr << "  (" << hostname << "," << port << ")" << std::endl;
             return EXIT_FAILURE;
         } //if
-        printf("socket\n");
+        // printf("socket\n");
 
         int yes = 1;
         status = setsockopt(socket_fd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int));
@@ -62,7 +63,7 @@ public:
             std::cerr << "  (" << hostname << "," << port << ")" << std::endl;
             return EXIT_FAILURE;
         } //if
-        printf("setsockopt\n");
+        // printf("setsockopt\n");
 
         status = listen(socket_fd, 512);
         if (status == -1) {
@@ -70,25 +71,25 @@ public:
             std::cerr << "  (" << hostname << "," << port << ")" << std::endl;
             return EXIT_FAILURE;
         } //if
-        printf("listen\n");
+        // printf("listen\n");
         return EXIT_SUCCESS;
     }
 
     std::pair<int, std::string> connect2Client(){
-        std::cout<<socket_fd<<std::endl;
+        // std::cout<<socket_fd<<std::endl;
         struct sockaddr_storage socket_addr;
         socklen_t socket_addr_len = sizeof(socket_addr);
         int client_connection_fd;
-        std::cout<<socket_fd<<std::endl;
-        printf("before accept\n");
-        std::cout<<socket_fd<<std::endl;
+        // std::cout<<socket_fd<<std::endl;
+        // printf("before accept\n");
+        // std::cout<<socket_fd<<std::endl;
         client_connection_fd = accept(socket_fd, (struct sockaddr *)&socket_addr, &socket_addr_len);
-        std::cout<<client_connection_fd;
+        // std::cout<<client_connection_fd;
         if (client_connection_fd == -1) {
             std::cerr << "Error: cannot accept connection on socket" << std::endl;
             return {-1, "cannot accept connection on socket."};
         } //if
-        printf("after accept\n");
+        // printf("after accept\n");
 
         struct sockaddr_in * addr_ip = (struct sockaddr_in *)&socket_addr;
         std::string ip = inet_ntoa(addr_ip->sin_addr);
@@ -113,6 +114,7 @@ private:
     std::string client_ip;
 public:
     ClientInfo(): client_fd(-1), client_id(-1), client_ip(NULL){}
+    ClientInfo(int client_fd, int client_id, std::string client_ip): client_fd(client_fd), client_id(client_id), client_ip(client_ip){}
     void set_fd(int fd){
         client_fd = fd;
     }
@@ -130,6 +132,12 @@ public:
     }
     std::string get_ip(){
         return client_ip;
+    }
+    void printInfo(){
+        std::cout << "client fd: "<<client_fd<<std::endl;
+        std::cout << "client id: "<<client_id<<std::endl;
+        std::cout << "client ip: "<<client_ip<<std::endl;
+
     }
 };
 

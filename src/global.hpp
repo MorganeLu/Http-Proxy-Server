@@ -3,6 +3,6 @@
 
 #include "logger.hpp"
 
-extern Logger logger("/var/log/erss/proxy.log");
+extern Logger logger("../var/log/erss/proxy.log");
 
 #endif
