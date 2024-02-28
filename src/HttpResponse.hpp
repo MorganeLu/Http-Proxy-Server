@@ -31,6 +31,7 @@ private:
     bool is_public;
     bool has_max_age;
     bool isChunked = false;
+    bool is_Etag = false;
 
     void parseCodeAndStatus();
     void parseEtag();
@@ -64,7 +65,7 @@ public:
     bool isPrivate() const;
     bool ishasMustRevalidate() const;
     bool getChunked() const;
-    string getFirstLine() const;
+    string getFirstLine();
 };
 
 #endif

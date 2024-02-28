@@ -1,5 +1,6 @@
 #include "cache.hpp"
 extern Logger logger;
+
 bool FIFOCache::inCache(HttpRequest req){
         std::map<std::string, HttpResponse>::iterator cache_it = cacheMap.find(req.getURI());
         if (cache_it == cacheMap.end() ) { 
@@ -18,10 +19,12 @@ void FIFOCache::removeCache(){
 
 int FIFOCache:: addCache(HttpRequest req, HttpResponse res){
     // not prevent caching entirely; it just requires caches to revalidate the response before serving it again
-    if (res.isNocache()) {
+    if (res.isNocache() || res.isNostore()) {
+        cout<<"situation 1 cache\n";
         return -1; 
     }
-    if (res.isPrivate() && res.getEtag().empty() && res.getLastModify().empty()) {
+    if (res.isPrivate() || res.getEtag().empty() || res.getLastModify().empty()) {
+        cout<<"situation 2 cache\n";
         return -1;
     }
 
@@ -31,12 +34,11 @@ int FIFOCache:: addCache(HttpRequest req, HttpResponse res){
             FIFOQue.erase(FIFOQue.begin() + i);
         }
     }
-
+    cout<<"Put in cache\n";
     // giving out a space FULL
     if(FIFOQue.size() == capacity){
         removeCache();
     }
-
 
     cacheMap[req.getURI()] = res;
     FIFOQue.push_back({req.getURI(), res});

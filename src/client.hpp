@@ -32,11 +32,12 @@ public:
 
         int status;
         // cout<<"start building client"<<endl;
+        cout<<"myServiering....:"<<hostname<<endl;
         status = getaddrinfo(hostname, port, &host_info, &host_info_list);
         if (status != 0) {
             std::cerr << "Error: cannot get address info for host" << std::endl;
             std::cerr << "  (" << hostname << "," << port << ")" << std::endl;
-            return EXIT_FAILURE;
+            // return EXIT_FAILURE;
         } // get address info for host
 
         socket_fd = socket(host_info_list->ai_family, 
@@ -45,7 +46,7 @@ public:
         if (socket_fd == -1) {
             std::cerr << "Error: cannot create socket" << std::endl;
             std::cerr << "  (" << hostname << "," << port << ")" << std::endl;
-            return EXIT_FAILURE;
+            // return EXIT_FAILURE;
         } // get socket
 
         return EXIT_SUCCESS;

@@ -17,7 +17,7 @@ private:
 
 public:
     Logger(const std::string& filename) : m_filename(filename) {
-        m_logfile.open(filename, std::ios::app); // Open file in append mode
+        m_logfile.open(filename); // Open file in append mode
     }
 
     ~Logger() {
@@ -33,10 +33,8 @@ public:
 
         // ID:	"REQUEST"	from	IPFROM	@	TIME
         std::string idStr = std::to_string(id);
-        std::string message = idStr + ": \"" + firstLine + "\" from" + host + "@" + timeStr;
-        printf("in logger\n");
+        std::string message = idStr + ": \"" + firstLine + "\" from " + host + " @ " + timeStr;
         if (m_logfile.is_open()) {
-            printf("can wirte in log\n");
             pthread_mutex_lock(&lock);
             m_logfile << message << std::endl;
             pthread_mutex_unlock(&lock);
@@ -74,7 +72,12 @@ public:
         // std::string serverStr(server);
 
         std::string message = idStr + ": Requesting \"" + firstLine + "\" from " + serverStr;
+        // cout<<"222222"<<endl;
+        // // pthread_mutex_lock(&lock);
+        // m_logfile << message << std::endl;
+        // // pthread_mutex_unlock(&lock);
         if (m_logfile.is_open()) {
+            cout<<"222222"<<endl;
             pthread_mutex_lock(&lock);
             m_logfile << message << std::endl;
             pthread_mutex_unlock(&lock);
@@ -106,7 +109,7 @@ public:
             situation = "cached, but requires re-validation";
         }
         std::string idStr = std::to_string(id);
-        std::string message = idStr + situation;
+        std::string message = idStr + ": "+ situation;
         if (m_logfile.is_open()) {
             pthread_mutex_lock(&lock);
             m_logfile << message << std::endl;
@@ -116,7 +119,7 @@ public:
 
     void log_respondClient(size_t id, string response){
         std::string idStr = std::to_string(id);
-        std::string message = idStr + "Responding \"" + response + "\"";
+        std::string message = idStr + ": Responding \"" + response + "\"";
 
         if (m_logfile.is_open()) {
             pthread_mutex_lock(&lock);

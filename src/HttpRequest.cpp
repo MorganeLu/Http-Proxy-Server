@@ -83,6 +83,12 @@ void HttpRequest::parseHost()
                 host = hostWithPort;
                 port = "80"; // Default HTTP port
             }
+            // host.erase(this->host.find_last_not_of("\r\n") + 1);
+
+            // string newHost = "";
+            // if(!host.empty()){
+            //     host.erase(host.size() - 1);
+            // }
         }
         else
         {
@@ -148,3 +154,40 @@ time_t HttpRequest::getDate(){
 size_t HttpRequest::getRequestId(){
     return requestId;
 }
+
+// #include <iostream>
+
+// int main() {
+//     // Example HTTP request string
+//     std::string httpRequestString = "GET http://www.man7.org/linux/man-pages/man2/recv.2.html HTTP/1.1\r\n"
+//                                    "Host: www.man7.org\r\n"
+//                                    "User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:58.0) Gecko/20100101 Firefox/58.0\r\n"
+//                                    "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\n"
+//                                    "Accept-Language: en-US,en;q=0.5\r\n"
+//                                    "Accept-Encoding: gzip, deflate\r\n"
+//                                    "Connection: keep-alive\r\n"
+//                                    "Upgrade-Insecure-Requests: 1\r\n"
+//                                    "\r\n";
+
+//     // Create an instance of HttpRequest
+//     HttpRequest httpRequest(httpRequestString, 1);
+
+//     // Test methods
+//     std::cout << "Request ID: " << httpRequest.getRequestId() << std::endl;
+//     std::cout << "Request Length: " << httpRequest.getRequestId() << std::endl;
+//     std::cout << "Method: " << httpRequest.getMethod() << std::endl;
+//     std::cout << "URI: " << httpRequest.getURI() << std::endl;
+//     std::cout << "Host: " << httpRequest.getHost() << std::endl;
+//     std::cout << "Port: " << httpRequest.getPort() << std::endl;
+//     std::cout << "First Line: " << httpRequest.getFirstLine() << std::endl;
+//     std::cout << "Content: " << httpRequest.getContent() << std::endl;
+
+//     // Date parsing test
+//     time_t parsedDate = httpRequest.getDate();
+//     if (parsedDate != -1) {
+//         std::cout << "Parsed Date: " << parsedDate << std::endl;
+//     }
+
+//     return 0;
+// }
+

@@ -1,7 +1,7 @@
 #include "proxyhttp.hpp"
 #include "logger.hpp"
 
-Logger logger("/var/log/erss/proxy.log"); 
+Logger logger("../var/log/erss/proxy.log"); 
 pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
 
 int main() {

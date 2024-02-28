@@ -40,7 +40,7 @@ public:
     static void getHttp(HttpRequest request, int client_fd,int requestId);
     static void postHttp(HttpRequest request, int client_fd,int requestId);
     static void connectHttp(HttpRequest request, int client_fd);
-    static void forwardData(HttpRequest request, int source_fd, int dest_fd, const string& logMessage);
+    static void forwardData(HttpRequest request, int source_fd, int dest_fd);
 
 };
 

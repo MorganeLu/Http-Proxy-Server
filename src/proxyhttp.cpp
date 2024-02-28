@@ -41,8 +41,8 @@ void ProxyHTTP::run(){
         // clientInfo.set_fd(client_fd);
         // clientInfo.set_id(client_id);
         // clientInfo.set_ip(client_ip);
-        cout << "******************************************"<<endl;
-        clientInfo.printInfo();
+        // cout << "******************************************"<<endl;
+        // clientInfo.printInfo();
 
         pthread_t thread;
         pthread_create(&thread, NULL, handle, &clientInfo);
@@ -108,17 +108,18 @@ void * ProxyHTTP::handle(void *clientInfo){
     // time_t now = time(nullptr);
     // std::tm * utc_time = std::gmtime(&now);
     std::string firstLine = req.getFirstLine();
-    std::cout <<"firstLine***********************:"<<firstLine<<"****************"<<endl;
-    std::cout << "Host: "<<req.getHost().c_str()<<endl;
+    // std::cout <<"firstLine***********************:"<<firstLine<<"****************"<<endl;
+    // cout<<"log_requestId: "<<requestId<<endl;
+    // std::cout << "Host: "<<req.getHost().c_str()<<"~~~~~~~~~~"<<endl;
+    //LOG
     logger.log_newRequest(requestId, firstLine, client_ip);
-    std::cout<<"after log"<<endl;
+    // std::cout<<"after log"<<endl;
 
     if(req.getMethod() == "GET"){
-        std::cout<<"in Get"<<endl;
         getHttp(req,client_fd,requestId); ///TBD
     }else if(req.getMethod() == "POST"){
         postHttp(req,client_fd,requestId); ///TBD
-    }else if(req.getMethod() == "Connect"){
+    }else if(req.getMethod() == "CONNECT"){
         connectHttp(req,client_fd);
         logger.log_closeTunnel(requestId);
     }else {
@@ -135,10 +136,22 @@ void * ProxyHTTP::handle(void *clientInfo){
 
 // handle GET method
 void ProxyHTTP::getHttp(HttpRequest request, int client_fd,int requestId){
-    // Client myServer(request.getHost().c_str(),request.getPort().c_str());
-    Client myServer("www.httpwatch.com",request.getPort().c_str());
-    cout<<"compare length:"<<sizeof(request.getHost().c_str())<<","<<sizeof("www.httpwatch.com")<<endl;
+    cout<<"entering getHttp.............."<<endl;
+    cout<<"HOST:"<<request.getHost().c_str()<<endl;
+    string tmpHost = request.getHost();
+    const char * tmp = tmpHost.c_str();
+    // cout<<"Char*:"<<tmp<<endl;
+    // cout<<strlen(request.getHost().c_str())<<endl;
+    // cout<<sizeof(tmpHost)<<endl;
+    Client myServer(tmp, request.getPort().c_str());
+    // Client myServer("www.httpwatch.com",request.getPort().c_str());
+    // std::cout << "Host: "<<request.getHost().c_str()<<"~~~~~~~~~~"<<endl;
+    // std::cout << "Host: "<<request.getPort().c_str()<<"-not char"<<endl;
 
+    // cout<<"GET=======================compare length:"<<sizeof(request.getHost().c_str())<<", "<<sizeof("www.artsci.utoronto.ca")<<endl;
+    // if(request.getHost().c_str() == request.getHost()){
+    //     cout<<"The same.\n";
+    // }
     //connect to server
     myServer.buildClient();
     int myServer_fd = myServer.connect2Server();
@@ -146,8 +159,9 @@ void ProxyHTTP::getHttp(HttpRequest request, int client_fd,int requestId){
     if(myServer_fd == -1){
         std::string msg = "ERROR Cannot connect to the socket.";
         logger.log_message(3,request.getRequestId(), msg);
-        return;
+        // return;
     }
+
 
     // bool succeed = true;
     //IF in cache
@@ -171,10 +185,9 @@ void ProxyHTTP::getHttp(HttpRequest request, int client_fd,int requestId){
             close(myServer_fd);
             return;
         }
-
     }
 
-    // Not in cache
+    // Not in cache 
 
     //LOG INPUT
     logger.log_response200(1,request.getRequestId(),"not in cache");
@@ -182,6 +195,7 @@ void ProxyHTTP::getHttp(HttpRequest request, int client_fd,int requestId){
     string content = request.getContent();
     const char *request_message = content.c_str();
 
+    
     // send to server
     int clinetLen = send(myServer_fd,request_message,strlen(request_message),0);
     if(clinetLen == -1){
@@ -194,8 +208,11 @@ void ProxyHTTP::getHttp(HttpRequest request, int client_fd,int requestId){
     //Log
     std::string firstLine = request.getFirstLine();
     std::string serverip = request.getHost();
-    logger.log_recvServer(request.getRequestId(), firstLine, serverip);
-
+    
+    //logger.log_recvServer(request.getRequestId(), firstLine, serverip);
+    // cout<<"1111111111111111111111111111111111"<<endl;
+    logger.log_contactServer(request.getRequestId(), firstLine, serverip);
+    cout<<"3333"<<endl;
     char first[1024];
     // Get from server the first time
     int serverLen = recv(myServer_fd,first,1024,0);
@@ -237,6 +254,7 @@ void ProxyHTTP::getHttp(HttpRequest request, int client_fd,int requestId){
     
     HttpResponse finalResponse(response_mesage);
 
+    // cout<<"RESPONSE_MESSAGE:"<<response_mesage<<endl;
     std::string finalfirstLine = finalResponse.getFirstLine();
     // std::string serverip = request.getHost();
     logger.log_recvServer(request.getRequestId(), finalfirstLine, serverip);
@@ -266,7 +284,13 @@ void ProxyHTTP::getHttp(HttpRequest request, int client_fd,int requestId){
 
 // handle POST method
 void ProxyHTTP::postHttp(HttpRequest request, int client_fd,int requestId){
-    Client myServer(request.getHost().c_str(),request.getPort().c_str());
+    string tmpHost = request.getHost();
+    const char * tmp = tmpHost.c_str();
+    // cout<<"Char*:"<<tmp<<endl;
+    // cout<<strlen(request.getHost().c_str())<<endl;
+    // cout<<sizeof(tmpHost)<<endl;
+    Client myServer(tmp, request.getPort().c_str());
+    // Client myServer(request.getHost().c_str(),request.getPort().c_str());
 
     //connect to server
     myServer.buildClient();
@@ -372,7 +396,16 @@ void ProxyHTTP::postHttp(HttpRequest request, int client_fd,int requestId){
 
 // handle connect method
 void ProxyHTTP::connectHttp(HttpRequest request, int client_fd){
-    Client myServer(request.getHost().c_str(),request.getPort().c_str());
+    string tmpHost = request.getHost();
+    const char * tmp = tmpHost.c_str();
+    // cout<<"Char*:"<<tmp<<endl;
+    // cout<<strlen(request.getHost().c_str())<<endl;
+    // cout<<sizeof(tmpHost)<<endl;
+    Client myServer(tmp, request.getPort().c_str());
+    // Client myServer(request.getHost().c_str(),request.getPort().c_str());
+    // Client myServer("www.httpwatch.com",request.getPort().c_str());
+    // cout<<"CONNECT=========================compare length:"<<sizeof(request.getHost())<<","<<sizeof("www.httpwatch.com")<<endl;
+
 
     //connect to server
     myServer.buildClient();
@@ -388,16 +421,54 @@ void ProxyHTTP::connectHttp(HttpRequest request, int client_fd){
     string response = "HTTP/1.1 200 OK\r\n\r\n";
     send(client_fd, response.c_str(), response.length(), 0);
 
+    std::vector<int> client_fds;
+    client_fds.push_back(client_fd);
+    client_fds.push_back(myServer_fd);
+
+    fd_set read_fds;
+    int max_fd = -1;
+
+    while(true){
+        FD_ZERO(&read_fds);
+        for (size_t i = 0; i < client_fds.size(); ++i) {
+            FD_SET(client_fds[i], &read_fds);
+            if (client_fds[i] > max_fd) {
+                max_fd = client_fds[i];
+            }
+        }
+
+        struct timeval timeout;
+        timeout.tv_sec = 1000;
+        timeout.tv_usec = 0;
+
+        int ready = select(max_fd + 1, &read_fds, NULL, NULL, &timeout);
+        if (ready == -1) {
+            perror("select");
+            return;
+        } else if (ready == 0) {
+            std::cout << "No neighbor is ready to send or receive potato." << std::endl;
+            return;
+        }
+
+        // Find the first ready client and send potato
+        if(FD_ISSET(client_fd, &read_fds)){
+            forwardData(request, client_fd, myServer_fd);
+        }
+        if(FD_ISSET(myServer_fd, &read_fds)){
+            forwardData(request, myServer_fd, client_fd);
+        }
+    }
+
     // Forward data between client and target server
-    forwardData(request, client_fd, myServer_fd, "Forwarding data from client to server");
-    forwardData(request, myServer_fd, client_fd, "Forwarding data from server to client");
+    
+    // forwardData(request, myServer_fd, client_fd, "Forwarding data from server to client");
 
      // close 
      close(myServer_fd);
 }
 
 // connect helper function
-void ProxyHTTP::forwardData(HttpRequest request, int source_fd, int dest_fd, const string& logMessage) {
+void ProxyHTTP::forwardData(HttpRequest request, int source_fd, int dest_fd) {
     char buffer[65536];
     int bytes_received = recv(source_fd, buffer, sizeof(buffer), 0);
     if (bytes_received > 0) {
@@ -408,7 +479,7 @@ void ProxyHTTP::forwardData(HttpRequest request, int source_fd, int dest_fd, con
             logger.log_message(3,request.getRequestId(), msg);
         }
     }
-    std::string msg = logMessage;
-    logger.log_message(1, request.getRequestId(), msg);
+    // std::string msg = logMessage;
+    // logger.log_message(1, request.getRequestId(), msg);
 }
 

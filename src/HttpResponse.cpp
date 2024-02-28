@@ -156,10 +156,12 @@ void HttpResponse::parseEtag()
         size_t etagStart = etagPos + 6;
         size_t etagEnd = responseContent.find("\r\n", etagStart);
         etag = responseContent.substr(etagStart, etagEnd - etagStart);
+        is_Etag = true;
     }
     else
     {
         // Handle the case where the "ETag" header is not found in the response
+        is_Etag = false;
         std::cerr << "ETag header not found in the response." << std::endl;
     }
 }
@@ -273,13 +275,14 @@ bool HttpResponse::ishasMustRevalidate() const{
     return hasMustRevalidate;
 }
 
-string HttpResponse::getFirstLine() const{
-    istringstream responseStream(responseContent);
-    string firstLine;
+string HttpResponse::getFirstLine() {
+    // istringstream responseStream(responseContent);
+    // string firstLine;
     
-    // Get the first line from the stream
-    getline(responseStream, firstLine);
-
+    // // Get the first line from the stream
+    // getline(responseStream, firstLine);
+    size_t firstLineEnd = responseContent.find("\r\n");
+    firstLine = responseContent.substr(0, firstLineEnd);
     return firstLine;
 }
 
