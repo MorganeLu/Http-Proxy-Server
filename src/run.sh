@@ -1,5 +1,5 @@
 #!/bin/bash
 make clean
 make
-./proxyhttp &
+./main &
 while true ; do continue ; done

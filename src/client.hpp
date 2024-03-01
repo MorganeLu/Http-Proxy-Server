@@ -59,14 +59,14 @@ public:
         if (status == -1) {
             std::cerr << "Error: cannot connect to socket" << std::endl;
             std::cerr << "  (" << hostname << "," << port << ")" << std::endl;
-            return -1;
+            // return -1;
         } // connect to the server
         return socket_fd;
     }
 
     ~Client() {
         free(host_info_list);
-        close(socket_fd);
+        // close(socket_fd);
     }
 
 };

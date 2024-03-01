@@ -31,6 +31,7 @@ public:
     // should prove it is in cache
     bool checkValid(HttpRequest req, HttpResponse res, int requestId);
     HttpResponse *getCache(HttpRequest req, int socket_fd);
+    void printCache();
 };
 
 

@@ -8,7 +8,6 @@ int main() {
     const char * port = "12345";
     ProxyHTTP myProxy(port);
     myProxy.run();
-  
 
   return 0;
 }

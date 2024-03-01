@@ -28,8 +28,14 @@ public:
     void log_newRequest(size_t id, string &firstLine, string &host) {
         std::time_t currentTime = std::time(nullptr);
         struct tm *localTime = localtime(&currentTime);
-        char* time_char = asctime(localTime);
-        string timeStr(time_char);
+        // char* time_char = asctime(localTime);
+        // string timeStr(time_char);
+        std::time_t utcTime = std::mktime(localTime);
+        std::string timeStr = std::asctime(std::gmtime(&utcTime));
+
+        if (!timeStr.empty() && timeStr[timeStr.size() - 1] == '\n') {
+            timeStr.erase(timeStr.size() - 1);
+        }
 
         // ID:	"REQUEST"	from	IPFROM	@	TIME
         std::string idStr = std::to_string(id);
@@ -47,9 +53,14 @@ public:
             situation = ": not in cache";
         }else if(status == 2){
             struct tm *localTime = localtime(&expireTime);
-            char* time_char = asctime(localTime);
-            string timeStr(time_char);
-            situation = ": in cache, but expired at" + timeStr;
+            std::time_t utcTime = std::mktime(localTime);
+            std::string timeStr = std::asctime(std::gmtime(&utcTime));
+
+            if (!timeStr.empty() && timeStr[timeStr.size() - 1] == '\n') {
+                timeStr.erase(timeStr.size() - 1);
+            }
+
+            situation = ": in cache, but expired at " + timeStr;
         }else if(status == 3){
             situation = ": in cache, requires validation";
         }else if(status == 4){
@@ -72,12 +83,7 @@ public:
         // std::string serverStr(server);
 
         std::string message = idStr + ": Requesting \"" + firstLine + "\" from " + serverStr;
-        // cout<<"222222"<<endl;
-        // // pthread_mutex_lock(&lock);
-        // m_logfile << message << std::endl;
-        // // pthread_mutex_unlock(&lock);
         if (m_logfile.is_open()) {
-            cout<<"222222"<<endl;
             pthread_mutex_lock(&lock);
             m_logfile << message << std::endl;
             pthread_mutex_unlock(&lock);
@@ -99,11 +105,18 @@ public:
     void log_response200(int status, size_t id, string reason, time_t expireTime=std::time(nullptr)){
         std::string situation;
         if(status == 1){
-            situation = reason;
+            situation = "not cacheable because " + reason;
         }else if(status == 2){
             struct tm *localTime = localtime(&expireTime);
-            char* time_char = asctime(localTime);
-            string timeStr(time_char);
+            // char* time_char = asctime(localTime);
+            // string timeStr(time_char);
+            std::time_t utcTime = std::mktime(localTime);
+            std::string timeStr = std::asctime(std::gmtime(&utcTime));
+
+            if (!timeStr.empty() && timeStr[timeStr.size() - 1] == '\n') {
+                timeStr.erase(timeStr.size() - 1);
+            }
+
             situation = "cached, expires at" + timeStr;
         }else if(status == 3){
             situation = "cached, but requires re-validation";

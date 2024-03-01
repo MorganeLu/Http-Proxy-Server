@@ -8,6 +8,7 @@
 #include <sstream>
 
 
+
 using namespace std;
 
 class HttpResponse {
@@ -40,6 +41,7 @@ private:
     void parseLastModify();
 
     void parseCacheControl();
+    void parseChunked();
     // void parseHeadLength();
     // void parseContentLength();
 
@@ -66,6 +68,9 @@ public:
     bool ishasMustRevalidate() const;
     bool getChunked() const;
     string getFirstLine();
+    void printRes();
+
+    time_t getValidExpireTime(); 
 };
 
 #endif

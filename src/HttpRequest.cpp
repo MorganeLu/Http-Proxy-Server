@@ -155,6 +155,18 @@ size_t HttpRequest::getRequestId(){
     return requestId;
 }
 
+void HttpRequest::printReq(){
+    std::cout << "Request ID: " << getRequestId() << std::endl;
+    std::cout << "Request Length: " << getRequestId() << std::endl;
+    std::cout << "Method: " << getMethod() << std::endl;
+    std::cout << "URI: " << getURI() << std::endl;
+    std::cout << "Host: " << getHost() << std::endl;
+    std::cout << "Port: " << getPort() << std::endl;
+    std::cout << "First Line: " << getFirstLine() << std::endl;
+    std::cout << "Content: " << getContent() << std::endl;
+    // std::cout << "Etag: " << get() << std::endl;
+}
+
 // #include <iostream>
 
 // int main() {

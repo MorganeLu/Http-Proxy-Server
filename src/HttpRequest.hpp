@@ -36,6 +36,7 @@ public:
     string getURI();
     time_t getDate();
     size_t getRequestId();
+    void printReq();
 };
 
 #endif

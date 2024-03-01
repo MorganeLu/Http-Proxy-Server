@@ -1,5 +1,5 @@
 #include "HttpResponse.hpp"
-
+#include <chrono>
 // Costructor
 HttpResponse::HttpResponse(const string& initResponse){
     responseContent = initResponse;
@@ -9,9 +9,32 @@ HttpResponse::HttpResponse(const string& initResponse){
     parseExpireDate();
     parseLastModify();
     parseCacheControl();
+    parseChunked();
 }
 
+void HttpResponse::parseChunked()
+{   
+    size_t transferEncodingPos = responseContent.find("Transfer-Encoding: chunked");
+    if (transferEncodingPos != string::npos) {
+        // Check if "chunked" is present after "Transfer-Encoding:"
+        size_t chunkedPos = responseContent.find("chunked", transferEncodingPos + 23);
+        if (chunkedPos != string::npos) {
+            isChunked = true;
+        }
+    }
+    isChunked = false;
+    // size_t cacheTransferPos = responseContent.find("Transfer-Encoding: ");
 
+    // if (cacheTransferPos != std::string::npos)
+    // {
+    //     size_t cacheTransferStart = cacheTransferPos + 18;
+    //     size_t cacheTransferEnd = responseContent.find("\r\n", cacheTransferStart);
+    //     std::string cacheTransferValue = responseContent.substr(cacheTransferStart, cacheTransferEnd - cacheTransferStart);
+
+    //     // Check for the presence of "must-revalidate"
+    //     isChunked = (cacheTransferValue.find("chunked") != string::npos);
+    // }
+}
 // parse the max-age in cache-control headers (max-age in the Cache-Control header is not guaranteed)
 void HttpResponse::parseCacheControl()
 {
@@ -26,6 +49,8 @@ void HttpResponse::parseCacheControl()
         // Check for the presence of "must-revalidate"
         hasMustRevalidate = (cacheControlValue.find("must-revalidate") != string::npos);
         no_cache = (cacheControlValue.find("no-cache") != string::npos);
+        is_private = (cacheControlValue.find("private") != string::npos);
+        no_store = (cacheControlValue.find("no-store") != string::npos);
         // Find the position of "max-age="
         size_t maxAgePos = cacheControlValue.find("max-age=");
 
@@ -40,6 +65,7 @@ void HttpResponse::parseCacheControl()
             {
                 // Convert the string to a size_t
                 max_age = stoul(maxAgeValue);
+                // cout << "max age: " << max_age<<endl;
             }
             catch (const std::invalid_argument &e)
             {
@@ -123,10 +149,14 @@ void HttpResponse::parseExpireDate()
         size_t dateStart = datePos + 9; // Move past "Expires: "
         size_t dateEnd = responseContent.find("\r\n", dateStart);
         string dateString = responseContent.substr(dateStart, dateEnd - dateStart);
-
+        if(dateString.empty() || dateString == "-1"){
+             std::cout << "dateString is empty" << std::endl;
+            return;
+        }
         // Convert the date string to a time structure
         struct tm tm = {};
         istringstream dateStream(dateString);
+        cout<<"Expire:"<<dateString<<endl;
         dateStream >> get_time(&tm, "%a, %d %b %Y %H:%M:%S %Z");
 
         if (!dateStream.fail())
@@ -135,12 +165,12 @@ void HttpResponse::parseExpireDate()
             expireDate = mktime(&tm);
 
             // Print the parsed time_t value
-            std::cout << "Parsed time_t value: " << date << std::endl;
+            // std::cout << "Parsed time_t value: " << date << std::endl;
         }
         else
         {
             // Handle the case where parsing the date string fails
-            std::cerr << "Error parsing Date string." << std::endl;
+            std::cerr << "Error parsing Date string11." << std::endl;
         }
     }
 }
@@ -150,9 +180,13 @@ void HttpResponse::parseEtag()
 {
     // Find the position of the "ETag" header in the response
     size_t etagPos = responseContent.find("ETag: ");
+    
+    // cout << "etagPos: "<<etagPos<<endl;
+    // cout << "responseContent: "<<responseContent<<endl;
 
     if (etagPos != std::string::npos)
-    {
+    {   
+        // printf("parse in etag, we have etag!!!!\n");
         size_t etagStart = etagPos + 6;
         size_t etagEnd = responseContent.find("\r\n", etagStart);
         etag = responseContent.substr(etagStart, etagEnd - etagStart);
@@ -162,7 +196,7 @@ void HttpResponse::parseEtag()
     {
         // Handle the case where the "ETag" header is not found in the response
         is_Etag = false;
-        std::cerr << "ETag header not found in the response." << std::endl;
+        // std::cerr << "ETag header not found in the response." << std::endl;
     }
 }
 // parse the date
@@ -183,10 +217,10 @@ void HttpResponse::parseDate()
         if (!dateStream.fail())
         {
             // Convert the time structure to a time_t value
-            time_t date = mktime(&tm);
+            date = mktime(&tm);
 
             // Print the parsed time_t value
-            std::cout << "Parsed time_t value: " << date << std::endl;
+            // std::cout << "Parsed time_t value: " << date << std::endl;
         }
         else
         {
@@ -275,6 +309,17 @@ bool HttpResponse::ishasMustRevalidate() const{
     return hasMustRevalidate;
 }
 
+
+time_t HttpResponse::getValidExpireTime() {
+    time_t datePlusMaxAge = date + static_cast<time_t>(max_age);
+    time_t res = std::min(datePlusMaxAge, expireDate);
+    // cout<<"date:"<<date<<endl;
+    // cout<<"max-age:"<<max_age<<endl;
+    // cout<<"expireDate:"<<expireDate<<endl;
+    // cout<<"Max Date:"<<res<<endl;
+    return res;
+}
+
 string HttpResponse::getFirstLine() {
     // istringstream responseStream(responseContent);
     // string firstLine;
@@ -287,31 +332,51 @@ string HttpResponse::getFirstLine() {
 }
 
 bool HttpResponse::getChunked() const{
-    size_t transferEncodingPos = responseContent.find("Transfer-Encoding: chunked");
-    if (transferEncodingPos != string::npos) {
-        // Check if "chunked" is present after "Transfer-Encoding:"
-        size_t chunkedPos = responseContent.find("chunked", transferEncodingPos + 23);
-        if (chunkedPos != string::npos) {
-            return true;
-        }
-    }
-    return false;
+    // size_t transferEncodingPos = responseContent.find("Transfer-Encoding: chunked");
+    // if (transferEncodingPos != string::npos) {
+    //     // Check if "chunked" is present after "Transfer-Encoding:"
+    //     size_t chunkedPos = responseContent.find("chunked", transferEncodingPos + 23);
+    //     if (chunkedPos != string::npos) {
+    //         return true;
+    //     }
+    // }
+    // return false;
+    return isChunked;
 }
 
 size_t HttpResponse::getContentLength() const{
-    size_t contentLengthPos = responseContent.find("Content-Length: ");
-    if (contentLengthPos != string::npos) {
-        // Extract the value of the "Content-Length" header
-        std::istringstream iss(responseContent.substr(contentLengthPos + 16));
-        size_t contentLength = 0;
-        iss >> contentLength;
-        return contentLength;
-    }
+    // size_t contentLengthPos = responseContent.find("Content-Length: ");
+    // if (contentLengthPos != string::npos) {
+    //     // Extract the value of the "Content-Length" header
+    //     std::istringstream iss(responseContent.substr(contentLengthPos + 16));
+    //     size_t contentLength = 0;
+    //     iss >> contentLength;
+    //     return contentLength;
+    // }
 
-    return 0;
+    // return 0;
+     if (responseContent.find("Content-Length: ") != string ::npos) {
+        // cout<<"in loop Content-Length"<<endl;
+    size_t Contentlen_begin = responseContent.find("Content-Length: ");
+    size_t Contentlen_end = responseContent.find("\r\n", Contentlen_begin);
+    Contentlen_begin += 16;
+    return stoul(
+        responseContent.substr(Contentlen_begin, Contentlen_end - Contentlen_begin));
+  }
+
+  return 0;
 }
 
 size_t HttpResponse::getHeadLength() const{
     size_t headerEnd = responseContent.find("\r\n\r\n");
      return (headerEnd != string::npos) ? headerEnd + 4 : 0;
 }
+
+void HttpResponse::printRes(){
+    std::cout << "Here is the response info:========================\n";
+    std::cout << "responseContent: "<< responseContent<<endl;
+    std::cout << "Etag: " << getEtag()<<endl;
+    std::cout << "Private: "<<isPrivate()<<endl;
+    // std::cout << "is chunk: "<< isChunked()<<endl;
+}
+

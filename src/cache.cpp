@@ -18,15 +18,23 @@ void FIFOCache::removeCache(){
 }
 
 int FIFOCache:: addCache(HttpRequest req, HttpResponse res){
-    // not prevent caching entirely; it just requires caches to revalidate the response before serving it again
-    if (res.isNocache() || res.isNostore()) {
-        cout<<"situation 1 cache\n";
-        return -1; 
-    }
-    if (res.isPrivate() || res.getEtag().empty() || res.getLastModify().empty()) {
-        cout<<"situation 2 cache\n";
+    if(res.isNostore()){
+        logger.log_response200(1, req.getRequestId(), "have no-store");
         return -1;
     }
+    if(res.isPrivate()){
+        logger.log_response200(1, req.getRequestId(), "have private tag");
+        return -1;
+    }
+    if(res.getEtag().empty()){
+        logger.log_response200(1, req.getRequestId(), "not have Etag");
+        return -1;
+    }
+    if(res.getLastModify().empty()){
+        logger.log_response200(1, req.getRequestId(), "Last Modify is empty");
+        return -1;
+    }
+    
 
     for(size_t i = 0;i<FIFOQue.size();i++){
         std::pair<std::string, HttpResponse> frontElement = FIFOQue.front();
@@ -34,7 +42,6 @@ int FIFOCache:: addCache(HttpRequest req, HttpResponse res){
             FIFOQue.erase(FIFOQue.begin() + i);
         }
     }
-    cout<<"Put in cache\n";
     // giving out a space FULL
     if(FIFOQue.size() == capacity){
         removeCache();
@@ -42,6 +49,12 @@ int FIFOCache:: addCache(HttpRequest req, HttpResponse res){
 
     cacheMap[req.getURI()] = res;
     FIFOQue.push_back({req.getURI(), res});
+    
+    // if(cacheMap.count(req.getURI())){
+    //     cacheMap[req.getURI()].printRes();
+    //     cout << "Now new response is in cache============================\n\n\n";
+    // }
+    printCache();
     return 0;
 }
 
@@ -50,18 +63,26 @@ bool FIFOCache::checkValid(HttpRequest req, HttpResponse res, int requestId){
     if(!inCache(req)){
         return false;
     }
-    
-    std::time_t now = time(nullptr);
-    std::time_t expireTime = res.getExpires();
-
-    // ID: in cache, requires validation
-    if (res.isNocache() || res.ishasMustRevalidate()) {
+    if(res.isNocache()){
         logger.log_getRequest(3, requestId);
         return false;
     }
+    if(res.getMaxAge() == 0){
+        logger.log_getRequest(3, requestId);
+        return false;
+    }
+    
+    std::time_t now = time(nullptr);
+    std::time_t expireTime = res.getValidExpireTime();
+
     // not sure how to compare the time_t??
     if(expireTime < now){
         logger.log_getRequest(2, requestId, expireTime);
+        return false;
+    }
+    // ID: in cache, requires validation
+    if (res.ishasMustRevalidate()) {
+        logger.log_getRequest(3, requestId);
         return false;
     }
 
@@ -80,6 +101,13 @@ HttpResponse *FIFOCache::getCache(HttpRequest req, int socket_fd){
     }
     // If not valid
     // send to server
+    string newReq = req.getContent();
+    if (!(resCache->getEtag()).empty()) {
+        newReq += "If-None-Match: " + resCache->getEtag() + "\r\n";
+    }
+    if (!(resCache->getLastModify()).empty()) {
+        newReq += "If-Modified-Since: " + resCache->getLastModify() + "\r\n";
+    }
     int status = send(socket_fd, req.getContent().c_str(), req.getContent().length(), 0);
     if (status == -1) {
         std::string msg = "Cannot send request to server for re-validation.";
@@ -111,8 +139,8 @@ HttpResponse *FIFOCache::getCache(HttpRequest req, int socket_fd){
 
     // ID: Received "xx" from serverip
     // std::string server = req.getHost();
-    // std::string resStr = resValid->getFirstLine();
-    // logger.log_recvServer(req.getRequestId(), resStr, server);
+    std::string resStr = resValid->getFirstLine();
+    logger.log_recvServer(req.getRequestId(), resStr, server);
 
     // 304: source not modify
     if (resValid->getCode() == "304") {
@@ -129,5 +157,27 @@ HttpResponse *FIFOCache::getCache(HttpRequest req, int socket_fd){
         logger.log_message(3, req.getRequestId(), msg);
         exit(EXIT_FAILURE);
     }
+}
 
+void FIFOCache::printCache(){
+    cout<<"Start printing cache...................\n";
+    std::deque<std::pair<std::string, HttpResponse> >::iterator itQue = FIFOQue.begin();
+    // std::map<std::string, HttpResponse>::iterator mapit = cacheMap.begin();
+    if(FIFOQue.size() != cacheMap.size()){
+        cout << "Cache size not matching\n";
+        cout << "MAP:"<<cacheMap.size()<<endl;
+        cout << "que:" <<FIFOQue.size()<<endl;
+        return;
     }
+    cout<<"IN QUE: "<<endl;
+    while(itQue != FIFOQue.end()){
+        cout << itQue->first <<endl;
+        itQue->second.printRes();
+        if(cacheMap.count(itQue->first)){
+            cacheMap[itQue->first].printRes();
+        }else{
+            cout<<"NOT find in map\n";
+        }
+        ++itQue;
+    }
+}
