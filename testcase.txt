@@ -1,0 +1,169 @@
+Testcases:
+
+1. no-cache: http://run.mocky.io/v3/b3daf7af-953c-4a43-96cc-ab9872a2542f
+Test Result:
+0: "GET http://run.mocky.io/v3/b3daf7af-953c-4a43-96cc-ab9872a2542f HTTP/1.1" from 10.197.96.217 @ Fri Mar  1 16:58:50 2024
+0: not in cache
+0: Requesting "GET http://run.mocky.io/v3/b3daf7af-953c-4a43-96cc-ab9872a2542f HTTP/1.1" from run.mocky.io
+0: Received "HTTP/1.1 200 OK" from run.mocky.io
+0: Responding "HTTP/1.1 200 OK"
+1: "GET http://run.mocky.io/v3/b3daf7af-953c-4a43-96cc-ab9872a2542f HTTP/1.1" from 10.197.96.217 @ Fri Mar  1 16:58:54 2024
+1: in cache, requires validation
+1: Requesting "GET http://run.mocky.io/v3/b3daf7af-953c-4a43-96cc-ab9872a2542f HTTP/1.1" from run.mocky.io
+1: Received "HTTP/1.1 200 OK" from run.mocky.io
+1: Responding "HTTP/1.1 200 OK"
+
+
+2. no-store: http://run.mocky.io/v3/b3a24aff-d23f-45d5-a771-6cda36d5de17
+Test Result:
+6: not in cache
+6: Requesting "GET http://run.mocky.io/favicon.ico HTTP/1.1" from run.mocky.io
+6: Received "HTTP/1.1 404 Not Found" from run.mocky.io
+6: not cacheable because not have Etag
+6: Responding "HTTP/1.1 404 Not Found"
+9: "GET http://www.httpwatch.com/httpgallery/chunked/chunkedimage.aspx HTTP/1.1" from 10.194.72.47 @ Fri Mar  1 18:07:29 2024
+9: not in cache
+9: Requesting "GET http://www.httpwatch.com/httpgallery/chunked/chunkedimage.aspx HTTP/1.1" from www.httpwatch.com
+9: Received "HTTP/1.1 200 OK" from www.httpwatch.com
+9: not cacheable because have no-store
+9: Responding "HTTP/1.1 200 OK"
+
+
+3. private: http://run.mocky.io/v3/48d99154-5cfe-4e6f-ac1e-137f4515b38b
+Test Result:
+0: "GET http://run.mocky.io/v3/48d99154-5cfe-4e6f-ac1e-137f4515b38b HTTP/1.1" from 10.194.72.47 @ Fri Mar  1 18:14:01 2024
+0: not in cache
+0: Requesting "GET http://run.mocky.io/v3/48d99154-5cfe-4e6f-ac1e-137f4515b38b HTTP/1.1" from run.mocky.io
+0: Received "HTTP/1.1 200 OK" from run.mocky.io
+0: not cacheable because have private tag
+0: Responding "HTTP/1.1 200 OK"
+1: "GET http://run.mocky.io/v3/48d99154-5cfe-4e6f-ac1e-137f4515b38b HTTP/1.1" from 10.194.72.47 @ Fri Mar  1 18:14:02 2024
+1: not in cache
+1: Requesting "GET http://run.mocky.io/v3/48d99154-5cfe-4e6f-ac1e-137f4515b38b HTTP/1.1" from run.mocky.io
+1: Received "HTTP/1.1 200 OK" from run.mocky.io
+1: not cacheable because have private tag
+1: Responding "HTTP/1.1 200 OK"
+
+
+4. empty last-modify: http://run.mocky.io/v3/be559632-0568-4ece-a51d-7494ae3b6bb2
+Test Result:
+2: "GET http://run.mocky.io/v3/be559632-0568-4ece-a51d-7494ae3b6bb2 HTTP/1.1" from 10.194.72.47 @ Fri Mar  1 18:14:12 2024
+2: not in cache
+2: Requesting "GET http://run.mocky.io/v3/be559632-0568-4ece-a51d-7494ae3b6bb2 HTTP/1.1" from run.mocky.io
+2: Received "HTTP/1.1 200 OK" from run.mocky.io
+2: not cacheable because Last Modify is empty
+2: Responding "HTTP/1.1 200 OK"
+3: "GET http://run.mocky.io/v3/be559632-0568-4ece-a51d-7494ae3b6bb2 HTTP/1.1" from 10.194.72.47 @ Fri Mar  1 18:14:13 2024
+3: not in cache
+3: Requesting "GET http://run.mocky.io/v3/be559632-0568-4ece-a51d-7494ae3b6bb2 HTTP/1.1" from run.mocky.io
+3: Received "HTTP/1.1 200 OK" from run.mocky.io
+3: not cacheable because Last Modify is empty
+3: Responding "HTTP/1.1 200 OK"
+
+
+5. no Etag: http://run.mocky.io/v3/819ab6eb-ba42-43b1-a889-38520c0f72c3
+Test Result:
+4: "CONNECT mozilla.cloudflare-dns.com:443 HTTP/1.1" from 10.194.72.47 @ Fri Mar  1 18:14:19 2024
+5: "GET http://run.mocky.io/v3/819ab6eb-ba42-43b1-a889-38520c0f72c3 HTTP/1.1" from 10.194.72.47 @ Fri Mar  1 18:14:25 2024
+5: not in cache
+5: Requesting "GET http://run.mocky.io/v3/819ab6eb-ba42-43b1-a889-38520c0f72c3 HTTP/1.1" from run.mocky.io
+5: Received "HTTP/1.1 200 OK" from run.mocky.io
+5: not cacheable because not have Etag
+5: Responding "HTTP/1.1 200 OK"
+6: "GET http://run.mocky.io/v3/819ab6eb-ba42-43b1-a889-38520c0f72c3 HTTP/1.1" from 10.194.72.47 @ Fri Mar  1 18:14:27 2024
+6: not in cache
+6: Requesting "GET http://run.mocky.io/v3/819ab6eb-ba42-43b1-a889-38520c0f72c3 HTTP/1.1" from run.mocky.io
+6: Received "HTTP/1.1 200 OK" from run.mocky.io
+6: not cacheable because not have Etag
+6: Responding "HTTP/1.1 200 OK"
+
+
+6. valid: http://run.mocky.io/v3/d2b9d1a6-6430-4db4-a9bf-b1b47c579e8f
+Test Result:
+7: "GET http://run.mocky.io/v3/d2b9d1a6-6430-4db4-a9bf-b1b47c579e8f HTTP/1.1" from 10.194.72.47 @ Fri Mar  1 18:14:35 2024
+7: not in cache
+7: Requesting "GET http://run.mocky.io/v3/d2b9d1a6-6430-4db4-a9bf-b1b47c579e8f HTTP/1.1" from run.mocky.io
+7: Received "HTTP/1.1 200 OK" from run.mocky.io
+7: Responding "HTTP/1.1 200 OK"
+8: "GET http://run.mocky.io/v3/d2b9d1a6-6430-4db4-a9bf-b1b47c579e8f HTTP/1.1" from 10.194.72.47 @ Fri Mar  1 18:14:37 2024
+8: in cache, valid
+8: Responding "HTTP/1.1 200 OK"
+
+
+7. expired: http://run.mocky.io/v3/483bd4a3-e973-4947-971f-cf85332f2a1c
+Test Result:
+0: "GET http://run.mocky.io/v3/483bd4a3-e973-4947-971f-cf85332f2a1c HTTP/1.1" from 10.194.72.47 @ Fri Mar  1 18:22:46 2024
+0: not in cache
+0: Requesting "GET http://run.mocky.io/v3/483bd4a3-e973-4947-971f-cf85332f2a1c HTTP/1.1" from run.mocky.io
+0: Received "HTTP/1.1 200 OK" from run.mocky.io
+0: Responding "HTTP/1.1 200 OK"
+1: "GET http://run.mocky.io/v3/483bd4a3-e973-4947-971f-cf85332f2a1c HTTP/1.1" from 10.194.72.47 @ Fri Mar  1 18:22:47 2024
+1: in cache, but expired at Thu Feb 22 12:28:00 2024
+1: Requesting "GET http://run.mocky.io/v3/483bd4a3-e973-4947-971f-cf85332f2a1c HTTP/1.1" from run.mocky.io
+1: Received "HTTP/1.1 200 OK" from run.mocky.io
+1: Responding "HTTP/1.1 200 OK"
+
+
+8. must-revalidation: http://run.mocky.io/v3/ed349188-dbf9-4e5a-b96b-256a58fbb175
+Test Result:
+0: "GET http://run.mocky.io/v3/ed349188-dbf9-4e5a-b96b-256a58fbb175 HTTP/1.1" from 10.194.72.47 @ Fri Mar  1 18:25:10 2024
+0: not in cache
+0: Requesting "GET http://run.mocky.io/v3/ed349188-dbf9-4e5a-b96b-256a58fbb175 HTTP/1.1" from run.mocky.io
+0: Received "HTTP/1.1 200 OK" from run.mocky.io
+0: Responding "HTTP/1.1 200 OK"
+1: "GET http://run.mocky.io/v3/ed349188-dbf9-4e5a-b96b-256a58fbb175 HTTP/1.1" from 10.194.72.47 @ Fri Mar  1 18:25:11 2024
+1: in cache, requires validation
+1: Requesting "GET http://run.mocky.io/v3/ed349188-dbf9-4e5a-b96b-256a58fbb175 HTTP/1.1" from run.mocky.io
+1: Received "HTTP/1.1 200 OK" from run.mocky.io
+1: Responding "HTTP/1.1 200 OK"
+
+
+9. expired and must-revalidation: http://run.mocky.io/v3/9f77437c-5fe3-4d1a-b8cf-27e05c68d535
+Test Result:
+2: "GET http://run.mocky.io/v3/9f77437c-5fe3-4d1a-b8cf-27e05c68d535 HTTP/1.1" from 10.194.72.47 @ Fri Mar  1 18:23:48 2024
+2: not in cache
+2: Requesting "GET http://run.mocky.io/v3/9f77437c-5fe3-4d1a-b8cf-27e05c68d535 HTTP/1.1" from run.mocky.io
+2: Received "HTTP/1.1 200 OK" from run.mocky.io
+2: Responding "HTTP/1.1 200 OK"
+3: "GET http://run.mocky.io/v3/9f77437c-5fe3-4d1a-b8cf-27e05c68d535 HTTP/1.1" from 10.194.72.47 @ Fri Mar  1 18:23:50 2024
+3: in cache, but expired at Mon Jan 22 12:28:00 2024
+3: Requesting "GET http://run.mocky.io/v3/9f77437c-5fe3-4d1a-b8cf-27e05c68d535 HTTP/1.1" from run.mocky.io
+3: Received "HTTP/1.1 200 OK" from run.mocky.io
+3: Responding "HTTP/1.1 200 OK"
+
+
+10. GET + POST
+Test Result:
+12: "GET http://httpbin.org/forms/post HTTP/1.1" from 10.194.72.47 @ Fri Mar  1 18:07:44 2024
+12: not in cache
+12: Requesting "GET http://httpbin.org/forms/post HTTP/1.1" from httpbin.org
+12: Received "HTTP/1.1 200 OK" from httpbin.org
+12: not cacheable because not have Etag
+12: Responding "HTTP/1.1 200 OK"
+13: "GET http://httpbin.org/favicon.ico HTTP/1.1" from 10.194.72.47 @ Fri Mar  1 18:07:44 2024
+13: not in cache
+13: Requesting "GET http://httpbin.org/favicon.ico HTTP/1.1" from httpbin.org
+13: Received "HTTP/1.1 404 NOT FOUND" from httpbin.org
+13: not cacheable because not have Etag
+13: Responding "HTTP/1.1 404 NOT FOUND"
+14: "POST http://httpbin.org/post HTTP/1.1" from 10.194.72.47 @ Fri Mar  1 18:07:47 2024
+14: Received "POST http://httpbin.org/post HTTP/1.1" from httpbin.org
+14: Received "HTTP/1.1 200 OK" from httpbin.org
+14: Responding " OK"
+
+
+11. chunked: http://www.httpwatch.com/httpgallery/chunked/chunkedimage.aspx
+Test Result:
+0: "GET http://www.httpwatch.com/httpgallery/chunked/chunkedimage.aspx HTTP/1.1" from 10.194.72.47 @ Fri Mar  1 18:19:21 2024
+0: not in cache
+0: Requesting "GET http://www.httpwatch.com/httpgallery/chunked/chunkedimage.aspx HTTP/1.1" from www.httpwatch.com
+0: Received "HTTP/1.1 200 OK" from www.httpwatch.com
+0: not cacheable because have no-store
+0: Responding "HTTP/1.1 200 OK"
+
+
+
+12. error 502:
+
+
+13. error 400:

@@ -1,0 +1,125 @@
+0: "GET http://www.httpwatch.com/httpgallery/chunked/chunkedimage.aspx HTTP/1.1" from 10.194.72.47 @ Fri Mar  1 18:40:19 2024
+0: not in cache
+0: Requesting "GET http://www.httpwatch.com/httpgallery/chunked/chunkedimage.aspx HTTP/1.1" from www.httpwatch.com
+0: Received "HTTP/1.1 200 OK" from www.httpwatch.com
+0: not cacheable because have no-store
+0: Responding "HTTP/1.1 200 OK"
+1: "CONNECT mozilla.cloudflare-dns.com:443 HTTP/1.1" from 10.194.72.47 @ Fri Mar  1 18:40:31 2024
+2: "GET http://run.mocky.io/v3/b3daf7af-953c-4a43-96cc-ab9872a2542f HTTP/1.1" from 10.194.72.47 @ Fri Mar  1 18:40:50 2024
+2: not in cache
+2: Requesting "GET http://run.mocky.io/v3/b3daf7af-953c-4a43-96cc-ab9872a2542f HTTP/1.1" from run.mocky.io
+2: Received "HTTP/1.1 200 OK" from run.mocky.io
+2: Responding "HTTP/1.1 200 OK"
+3: "GET http://run.mocky.io/v3/b3daf7af-953c-4a43-96cc-ab9872a2542f HTTP/1.1" from 10.194.72.47 @ Fri Mar  1 18:40:51 2024
+3: in cache, requires validation
+3: Requesting "GET http://run.mocky.io/v3/b3daf7af-953c-4a43-96cc-ab9872a2542f HTTP/1.1" from run.mocky.io
+3: Received "HTTP/1.1 200 OK" from run.mocky.io
+3: Responding "HTTP/1.1 200 OK"
+4: "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from 10.194.72.47 @ Fri Mar  1 18:40:51 2024
+5: "POST http://ocsp.digicert.com/ HTTP/1.1" from 10.194.72.47 @ Fri Mar  1 18:40:52 2024
+5: Received "POST http://ocsp.digicert.com/ HTTP/1.1" from ocsp.digicert.com
+6: "GET http://run.mocky.io/v3/b3a24aff-d23f-45d5-a771-6cda36d5de17 HTTP/1.1" from 10.194.72.47 @ Fri Mar  1 18:41:03 2024
+6: not in cache
+6: Requesting "GET http://run.mocky.io/v3/b3a24aff-d23f-45d5-a771-6cda36d5de17 HTTP/1.1" from run.mocky.io
+6: Received "HTTP/1.1 200 OK" from run.mocky.io
+6: not cacheable because have no-store
+6: Responding "HTTP/1.1 200 OK"
+7: "GET http://run.mocky.io/v3/b3a24aff-d23f-45d5-a771-6cda36d5de17 HTTP/1.1" from 10.194.72.47 @ Fri Mar  1 18:41:04 2024
+7: not in cache
+7: Requesting "GET http://run.mocky.io/v3/b3a24aff-d23f-45d5-a771-6cda36d5de17 HTTP/1.1" from run.mocky.io
+7: Received "HTTP/1.1 200 OK" from run.mocky.io
+7: not cacheable because have no-store
+7: Responding "HTTP/1.1 200 OK"
+8: "GET http://run.mocky.io/v3/48d99154-5cfe-4e6f-ac1e-137f4515b38b HTTP/1.1" from 10.194.72.47 @ Fri Mar  1 18:41:14 2024
+8: not in cache
+8: Requesting "GET http://run.mocky.io/v3/48d99154-5cfe-4e6f-ac1e-137f4515b38b HTTP/1.1" from run.mocky.io
+8: Received "HTTP/1.1 200 OK" from run.mocky.io
+8: not cacheable because have private tag
+8: Responding "HTTP/1.1 200 OK"
+9: "GET http://run.mocky.io/v3/be559632-0568-4ece-a51d-7494ae3b6bb2 HTTP/1.1" from 10.194.72.47 @ Fri Mar  1 18:41:25 2024
+9: not in cache
+9: Requesting "GET http://run.mocky.io/v3/be559632-0568-4ece-a51d-7494ae3b6bb2 HTTP/1.1" from run.mocky.io
+9: Received "HTTP/1.1 200 OK" from run.mocky.io
+9: not cacheable because Last Modify is empty
+9: Responding "HTTP/1.1 200 OK"
+10: "GET http://run.mocky.io/v3/819ab6eb-ba42-43b1-a889-38520c0f72c3 HTTP/1.1" from 10.194.72.47 @ Fri Mar  1 18:41:36 2024
+10: not in cache
+10: Requesting "GET http://run.mocky.io/v3/819ab6eb-ba42-43b1-a889-38520c0f72c3 HTTP/1.1" from run.mocky.io
+10: Received "HTTP/1.1 200 OK" from run.mocky.io
+10: not cacheable because not have Etag
+10: Responding "HTTP/1.1 200 OK"
+11: "GET http://run.mocky.io/v3/d2b9d1a6-6430-4db4-a9bf-b1b47c579e8f HTTP/1.1" from 10.194.72.47 @ Fri Mar  1 18:41:45 2024
+11: not in cache
+11: Requesting "GET http://run.mocky.io/v3/d2b9d1a6-6430-4db4-a9bf-b1b47c579e8f HTTP/1.1" from run.mocky.io
+11: Received "HTTP/1.1 200 OK" from run.mocky.io
+11: Responding "HTTP/1.1 200 OK"
+5: Received "HTTP/1.1 408 Request Timeout" from ocsp.digicert.com
+5: Responding " Request Timeout"
+12: "POST http://ocsp.digicert.com/ HTTP/1.1" from 10.194.72.47 @ Fri Mar  1 18:41:52 2024
+12: Received "POST http://ocsp.digicert.com/ HTTP/1.1" from ocsp.digicert.com
+13: "GET http://run.mocky.io/v3/d2b9d1a6-6430-4db4-a9bf-b1b47c579e8f HTTP/1.1" from 10.194.72.47 @ Fri Mar  1 18:41:59 2024
+13: in cache, valid
+13: Responding "HTTP/1.1 200 OK"
+14: "GET http://run.mocky.io/v3/483bd4a3-e973-4947-971f-cf85332f2a1c HTTP/1.1" from 10.194.72.47 @ Fri Mar  1 18:42:07 2024
+14: not in cache
+14: Requesting "GET http://run.mocky.io/v3/483bd4a3-e973-4947-971f-cf85332f2a1c HTTP/1.1" from run.mocky.io
+14: Received "HTTP/1.1 200 OK" from run.mocky.io
+14: Responding "HTTP/1.1 200 OK"
+15: "GET http://run.mocky.io/v3/483bd4a3-e973-4947-971f-cf85332f2a1c HTTP/1.1" from 10.194.72.47 @ Fri Mar  1 18:42:09 2024
+15: in cache, but expired at Thu Feb 22 07:28:00 2024
+15: Requesting "GET http://run.mocky.io/v3/483bd4a3-e973-4947-971f-cf85332f2a1c HTTP/1.1" from run.mocky.io
+15: Received "HTTP/1.1 200 OK" from run.mocky.io
+15: Responding "HTTP/1.1 200 OK"
+16: "GET http://run.mocky.io/v3/ed349188-dbf9-4e5a-b96b-256a58fbb175 HTTP/1.1" from 10.194.72.47 @ Fri Mar  1 18:42:23 2024
+16: not in cache
+16: Requesting "GET http://run.mocky.io/v3/ed349188-dbf9-4e5a-b96b-256a58fbb175 HTTP/1.1" from run.mocky.io
+16: Received "HTTP/1.1 200 OK" from run.mocky.io
+16: Responding "HTTP/1.1 200 OK"
+17: "GET http://run.mocky.io/v3/ed349188-dbf9-4e5a-b96b-256a58fbb175 HTTP/1.1" from 10.194.72.47 @ Fri Mar  1 18:42:28 2024
+17: in cache, requires validation
+17: Requesting "GET http://run.mocky.io/v3/ed349188-dbf9-4e5a-b96b-256a58fbb175 HTTP/1.1" from run.mocky.io
+17: Received "HTTP/1.1 200 OK" from run.mocky.io
+17: Responding "HTTP/1.1 200 OK"
+18: "GET http://run.mocky.io/v3/9f77437c-5fe3-4d1a-b8cf-27e05c68d535 HTTP/1.1" from 10.194.72.47 @ Fri Mar  1 18:42:38 2024
+18: not in cache
+18: Requesting "GET http://run.mocky.io/v3/9f77437c-5fe3-4d1a-b8cf-27e05c68d535 HTTP/1.1" from run.mocky.io
+18: Received "HTTP/1.1 200 OK" from run.mocky.io
+18: Responding "HTTP/1.1 200 OK"
+19: "GET http://run.mocky.io/v3/9f77437c-5fe3-4d1a-b8cf-27e05c68d535 HTTP/1.1" from 10.194.72.47 @ Fri Mar  1 18:42:43 2024
+19: in cache, but expired at Mon Jan 22 07:28:00 2024
+19: Requesting "GET http://run.mocky.io/v3/9f77437c-5fe3-4d1a-b8cf-27e05c68d535 HTTP/1.1" from run.mocky.io
+19: Received "HTTP/1.1 200 OK" from run.mocky.io
+19: Responding "HTTP/1.1 200 OK"
+12: Received "HTTP/1.1 408 Request Timeout" from ocsp.digicert.com
+12: Responding " Request Timeout"
+20: "POST http://ocsp.digicert.com/ HTTP/1.1" from 10.194.72.47 @ Fri Mar  1 18:42:53 2024
+20: Received "POST http://ocsp.digicert.com/ HTTP/1.1" from ocsp.digicert.com
+21: "GET http://httpbin.org/forms/post HTTP/1.1" from 10.194.72.47 @ Fri Mar  1 18:43:10 2024
+21: not in cache
+21: Requesting "GET http://httpbin.org/forms/post HTTP/1.1" from httpbin.org
+21: Received "HTTP/1.1 200 OK" from httpbin.org
+21: not cacheable because not have Etag
+21: Responding "HTTP/1.1 200 OK"
+22: "POST http://httpbin.org/post HTTP/1.1" from 10.194.72.47 @ Fri Mar  1 18:43:13 2024
+22: Received "POST http://httpbin.org/post HTTP/1.1" from httpbin.org
+22: Received "HTTP/1.1 200 OK" from httpbin.org
+22: Responding " OK"
+23: "GET http://www.httpwatch.com/httpgallery/chunked/chunkedimage.aspx HTTP/1.1" from 10.194.72.47 @ Fri Mar  1 18:43:23 2024
+23: not in cache
+23: Requesting "GET http://www.httpwatch.com/httpgallery/chunked/chunkedimage.aspx HTTP/1.1" from www.httpwatch.com
+23: Received "HTTP/1.1 200 OK" from www.httpwatch.com
+23: not cacheable because have no-store
+23: Responding "HTTP/1.1 200 OK"
+24: "GET http://www.httpwatch.com/httpgallery/chunked/chunkedimage.aspx HTTP/1.1" from 10.194.72.47 @ Fri Mar  1 18:43:39 2024
+24: not in cache
+24: Requesting "GET http://www.httpwatch.com/httpgallery/chunked/chunkedimage.aspx HTTP/1.1" from www.httpwatch.com
+24: Received "HTTP/1.1 200 OK" from www.httpwatch.com
+24: not cacheable because have no-store
+24: Responding "HTTP/1.1 200 OK"
+25: "CONNECT spocs.getpocket.com:443 HTTP/1.1" from 10.194.72.47 @ Fri Mar  1 18:43:51 2024
+26: "POST http://r3.o.lencr.org/ HTTP/1.1" from 10.194.72.47 @ Fri Mar  1 18:43:51 2024
+26: Received "POST http://r3.o.lencr.org/ HTTP/1.1" from r3.o.lencr.org
+20: Received "HTTP/1.1 408 Request Timeout" from ocsp.digicert.com
+20: Responding " Request Timeout"
+27: "POST http://ocsp.digicert.com/ HTTP/1.1" from 10.194.72.47 @ Fri Mar  1 18:43:53 2024
+27: Received "POST http://ocsp.digicert.com/ HTTP/1.1" from ocsp.digicert.com

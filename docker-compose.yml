@@ -1,9 +1,8 @@
 version: '3.3'
 
 services:
-  proxy:
+  main:
     build: ./src
-    command: bash -c "./run.sh"
     volumes:
       - type: bind
         source: ./var

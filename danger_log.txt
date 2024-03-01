@@ -1,3 +1,28 @@
 Danger log:
 
-1. About socket:
+1. Concurrency Issues
+Description: While implementing concurrent handling of multiple connections, encountered race conditions leading to data corruption and server crashes.
+Solution: Use critical section protection to identify critical sections of code where shared resources are accessed or modified by multiple threads concurrently by mutual lock.
+
+2. Cache Bugs
+Description: Found bugs in the cache invalidation logic, resulting in stale content being served to clients and inconsistent cache behavior.
+Solution: Use Cache-Control Directives to leverage Cache-Control directives provided by HTTP headers to control caching behavior. There are 4 situations that will not save in cache: no-store, private, no last modify, no Etag.
+
+3.Communication Breakdowns
+Description: Experienced communication breakdowns within the development team or with stakeholders, leading to misunderstandings, delays, or misaligned priorities.
+Solution: Only keep the logger for errors and remove all the exit(EXIT_FAILURE) to make sure the program will stay in the loop until I stop I manually.
+
+4.Deployment Challenges
+Description: Faced difficulties deploying the server in production environments, including configuration errors, compatibility issues, and deployment automation failures.
+Solution: Use Docker to make all the step into "sudo docker-compose up", however using Docker also leads to new issues.
+
+5. Logging and Monitoring Deficiencies
+Description: Found gaps in logging and monitoring capabilities, hindering debugging efforts and making it difficult to track server activity and performance metrics.
+Solution: Simulate the http request and response and go through the whole simulation to check the correctness
+
+6. Duplicate Inclusion Problem
+Description: Encountered issues with duplicate inclusion of header files throughout the codebase, leading to compilation errors and inconsistent behavior.
+Solution: Use header guard implementation by adding header guards to all header files using the traditional #ifndef, #define, and #endif directives. This ensures that each header file is included only once within a translation unit.
+
+7. Exception guarantees is basic guarantee.
+

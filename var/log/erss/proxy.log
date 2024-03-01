@@ -1,0 +1,10 @@
+0: "GET http://run.mocky.io/v3/ed349188-dbf9-4e5a-b96b-256a58fbb175 HTTP/1.1" from 10.194.72.47 @ Fri Mar  1 18:25:10 2024
+0: not in cache
+0: Requesting "GET http://run.mocky.io/v3/ed349188-dbf9-4e5a-b96b-256a58fbb175 HTTP/1.1" from run.mocky.io
+0: Received "HTTP/1.1 200 OK" from run.mocky.io
+0: Responding "HTTP/1.1 200 OK"
+1: "GET http://run.mocky.io/v3/ed349188-dbf9-4e5a-b96b-256a58fbb175 HTTP/1.1" from 10.194.72.47 @ Fri Mar  1 18:25:11 2024
+1: in cache, requires validation
+1: Requesting "GET http://run.mocky.io/v3/ed349188-dbf9-4e5a-b96b-256a58fbb175 HTTP/1.1" from run.mocky.io
+1: Received "HTTP/1.1 200 OK" from run.mocky.io
+1: Responding "HTTP/1.1 200 OK"
