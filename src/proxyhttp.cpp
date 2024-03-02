@@ -3,10 +3,6 @@
 extern Logger logger;
 FIFOCache myCache(100);
 
-void ProxyHTTP::multiRun(){
-    
-}
-
 void ProxyHTTP::run(){
     Server server(port);
     int ready = server.buildServer();
@@ -51,42 +47,18 @@ void ProxyHTTP::run(){
 
 
 void ProxyHTTP::Log502(int client_fd, int requestId){
-    // std::string response = "HTTP/1.1 502 Bad Gateway\r\n\r\n";
-    // int status = send(client_fd, response.c_str(), response.size(), 0);
-    // if (status == -1) {
-    //     std::string msg = "Cannot send 502 Bad Gateway.";
-    //     logger.log_message(3, requestId, msg);
-    // }
     std::string msg = "502 Bad Gateway";
     logger.log_message(2, requestId, msg);
 }
 void ProxyHTTP::Log503(int client_fd, int requestId){
-    // std::string response = "HTTP/1.1 503 Service Unavailable\r\n\r\n";
-    // int status = send(client_fd, response.c_str(), response.size(), 0);
-    // if (status == -1) {
-    //     std::string msg = "Cannot send 503 Service Unavailable.";
-    //     logger.log_message(3, requestId, msg);
-    // }
     std::string msg = "503 Service Unavailable";
     logger.log_message(2, requestId, msg);
 }
 void ProxyHTTP::Log400(int client_fd, int requestId){
-    // std::string response = "HTTP/1.1 400 Bad Request\r\n\r\n";
-    // int status = send(client_fd, response.c_str(), response.size(), 0);
-    // if (status == -1) {
-    //     std::string msg = "Cannot send 400 error.";
-    //     logger.log_message(3, requestId, msg);
-    // }
     std::string msg = "400 Bad Request";
     logger.log_message(2, requestId, msg);
 }
 void ProxyHTTP::Log404(int client_fd, int requestId){
-    // std::string response = "HTTP/1.1 404 Not Found\r\n\r\n";
-    // int status = send(client_fd, response.c_str(), response.size(), 0);
-    // if (status == -1) {
-    //     std::string msg = "Cannot send 404 Not Found.";
-    //     logger.log_message(3, requestId, msg);
-    // }
     std::string msg = "404 Not Found";
     logger.log_message(2, requestId, msg);
 }

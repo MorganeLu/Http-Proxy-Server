@@ -30,7 +30,6 @@ public:
     ProxyHTTP():hostname(NULL), port(NULL){}
     ProxyHTTP(const char *port):hostname(NULL), port(port){}
 
-    void multiRun();
     void run();
     static void Log502(int client_fd, int requestId);
     static void Log503(int client_fd, int requestId);
