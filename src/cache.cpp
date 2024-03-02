@@ -54,7 +54,17 @@ int FIFOCache:: addCache(HttpRequest req, HttpResponse res){
     //     cacheMap[req.getURI()].printRes();
     //     cout << "Now new response is in cache============================\n\n\n";
     // }
-    printCache();
+    // printCache();
+    //log
+    std::time_t now = time(nullptr);
+    std::time_t validTime = res.getValidExpireTime();
+    std::time_t expireTime = res.getExpires();
+
+    if(expireTime < now){
+        logger.log_response200(2, req.getRequestId(), "", expireTime);
+    }else if(res.ishasMustRevalidate() || res.isNocache() || res.getMaxAge() == 0 || validTime < now){
+        logger.log_response200(3, req.getRequestId(), "");
+    }
     return 0;
 }
 
@@ -73,7 +83,8 @@ bool FIFOCache::checkValid(HttpRequest req, HttpResponse res, int requestId){
     }
     
     std::time_t now = time(nullptr);
-    std::time_t expireTime = res.getValidExpireTime();
+    std::time_t validTime = res.getValidExpireTime();
+    std::time_t expireTime = res.getExpires();
 
     // not sure how to compare the time_t??
     if(expireTime < now){
@@ -81,7 +92,7 @@ bool FIFOCache::checkValid(HttpRequest req, HttpResponse res, int requestId){
         return false;
     }
     // ID: in cache, requires validation
-    if (res.ishasMustRevalidate()) {
+    if (res.ishasMustRevalidate() || validTime < now) {
         logger.log_getRequest(3, requestId);
         return false;
     }

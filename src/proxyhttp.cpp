@@ -51,36 +51,44 @@ void ProxyHTTP::run(){
 
 
 void ProxyHTTP::Log502(int client_fd, int requestId){
-    std::string response = "HTTP/1.1 502 Bad Gateway\r\n\r\n";
-    int status = send(client_fd, response.c_str(), response.size(), 0);
-    if (status == -1) {
-        std::string msg = "Cannot send 502 Bad Gateway.";
-        logger.log_message(3, requestId, msg);
-    }
+    // std::string response = "HTTP/1.1 502 Bad Gateway\r\n\r\n";
+    // int status = send(client_fd, response.c_str(), response.size(), 0);
+    // if (status == -1) {
+    //     std::string msg = "Cannot send 502 Bad Gateway.";
+    //     logger.log_message(3, requestId, msg);
+    // }
+    std::string msg = "502 Bad Gateway";
+    logger.log_message(2, requestId, msg);
 }
 void ProxyHTTP::Log503(int client_fd, int requestId){
-    std::string response = "HTTP/1.1 503 Service Unavailable\r\n\r\n";
-    int status = send(client_fd, response.c_str(), response.size(), 0);
-    if (status == -1) {
-        std::string msg = "Cannot send 503 Service Unavailable.";
-        logger.log_message(3, requestId, msg);
-    }
+    // std::string response = "HTTP/1.1 503 Service Unavailable\r\n\r\n";
+    // int status = send(client_fd, response.c_str(), response.size(), 0);
+    // if (status == -1) {
+    //     std::string msg = "Cannot send 503 Service Unavailable.";
+    //     logger.log_message(3, requestId, msg);
+    // }
+    std::string msg = "503 Service Unavailable";
+    logger.log_message(2, requestId, msg);
 }
 void ProxyHTTP::Log400(int client_fd, int requestId){
-    std::string response = "HTTP/1.1 400 Bad Request\r\n\r\n";
-    int status = send(client_fd, response.c_str(), response.size(), 0);
-    if (status == -1) {
-        std::string msg = "Cannot send 400 error.";
-        logger.log_message(3, requestId, msg);
-    }
+    // std::string response = "HTTP/1.1 400 Bad Request\r\n\r\n";
+    // int status = send(client_fd, response.c_str(), response.size(), 0);
+    // if (status == -1) {
+    //     std::string msg = "Cannot send 400 error.";
+    //     logger.log_message(3, requestId, msg);
+    // }
+    std::string msg = "400 Bad Request";
+    logger.log_message(2, requestId, msg);
 }
 void ProxyHTTP::Log404(int client_fd, int requestId){
-    std::string response = "HTTP/1.1 404 Not Found\r\n\r\n";
-    int status = send(client_fd, response.c_str(), response.size(), 0);
-    if (status == -1) {
-        std::string msg = "Cannot send 404 Not Found.";
-        logger.log_message(3, requestId, msg);
-    }
+    // std::string response = "HTTP/1.1 404 Not Found\r\n\r\n";
+    // int status = send(client_fd, response.c_str(), response.size(), 0);
+    // if (status == -1) {
+    //     std::string msg = "Cannot send 404 Not Found.";
+    //     logger.log_message(3, requestId, msg);
+    // }
+    std::string msg = "404 Not Found";
+    logger.log_message(2, requestId, msg);
 }
 
 void * ProxyHTTP::handle(void *clientInfo){
@@ -232,7 +240,6 @@ void ProxyHTTP::getHttp(HttpRequest request, int client_fd,int requestId){
     // cout << "getContentLenongth: "<<myResponse.getContentLength()<<endl;
 
 
-    // cout<<"CHUNK: ";
     while(!isComplete){
         // cout<<"in chunk!!!!!"<<endl;
         if(myResponse.getContentLength() != 0 && unreceivedLen <=0){
@@ -266,6 +273,18 @@ void ProxyHTTP::getHttp(HttpRequest request, int client_fd,int requestId){
     
     HttpResponse finalResponse(response_mesage);
     // finalResponse.printRes();
+    if(finalResponse.getCode() == "502"){
+        Log502(client_fd, requestId);
+    }
+    if(finalResponse.getCode() == "400"){
+        Log400(client_fd, requestId);
+    }
+    if(finalResponse.getCode() == "503"){
+        Log503(client_fd, requestId);
+    }
+    if(finalResponse.getCode() == "404"){
+        Log404(client_fd, requestId);
+    }
 
     // cout<<"RESPONSE_MESSAGE:"<<response_mesage<<endl;
     std::string finalfirstLine = finalResponse.getFirstLine();
@@ -282,7 +301,10 @@ void ProxyHTTP::getHttp(HttpRequest request, int client_fd,int requestId){
         close(myServer_fd);
         return;
     }
-    myCache.addCache(request, finalResponse);
+    if(finalResponse.getCode() == "200"){
+        myCache.addCache(request, finalResponse);
+    }
+    
 
     // // if response is not chunked
     // if(!finalResponse.getChunked()){
@@ -342,14 +364,6 @@ void ProxyHTTP::postHttp(HttpRequest request, int client_fd,int requestId){
         return;
     }
 
-    // char firstResponse[1024];
-    // serverLen = recv(myServer_fd,firstResponse,1024,0);
-    // if(serverLen == -1){
-    //     Log502(client_fd,requestId);
-    //     close(myServer_fd);
-    //     return;
-    // }
-    
     // start receive message...
     string response_mesage;
     response_mesage.append(first,serverLen);
@@ -386,6 +400,19 @@ void ProxyHTTP::postHttp(HttpRequest request, int client_fd,int requestId){
     
     // receive all messages
     HttpResponse finalResponse(response_mesage);
+    if(finalResponse.getCode() == "502"){
+        Log502(client_fd, requestId);
+    }
+    if(finalResponse.getCode() == "400"){
+        Log400(client_fd, requestId);
+    }
+    if(finalResponse.getCode() == "503"){
+        Log503(client_fd, requestId);
+    }
+    if(finalResponse.getCode() == "404"){
+        Log404(client_fd, requestId);
+    }
+    
 
     // LOG
     std::string finalfirstLine = finalResponse.getFirstLine();
@@ -466,10 +493,6 @@ void ProxyHTTP::connectHttp(HttpRequest request, int client_fd){
         }
     }
 
-    // Forward data between client and target server
-    
-    // forwardData(request, myServer_fd, client_fd, "Forwarding data from server to client");
-
      // close 
      close(myServer_fd);
 }
@@ -486,7 +509,5 @@ void ProxyHTTP::forwardData(HttpRequest request, int source_fd, int dest_fd) {
             logger.log_message(3,request.getRequestId(), msg);
         }
     }
-    // std::string msg = logMessage;
-    // logger.log_message(1, request.getRequestId(), msg);
 }
 

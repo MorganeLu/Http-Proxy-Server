@@ -1,6 +1,8 @@
 # Set the base image to Ubuntu
 FROM ubuntu:20.04
 LABEL maintainer="Kaixin Lu && Qianyi Xue"
+RUN mkdir ../var/log/erss
+RUN touch ../var/log/erss/proxy.log
 WORKDIR /code
 COPY . .
 RUN apt-get update && \

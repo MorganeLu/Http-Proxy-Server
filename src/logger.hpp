@@ -117,7 +117,7 @@ public:
                 timeStr.erase(timeStr.size() - 1);
             }
 
-            situation = "cached, expires at" + timeStr;
+            situation = "cached, expires at " + timeStr;
         }else if(status == 3){
             situation = "cached, but requires re-validation";
         }
@@ -166,7 +166,7 @@ public:
 
         if (m_logfile.is_open()) {
             pthread_mutex_lock(&lock);
-            m_logfile << message << std::endl;
+            m_logfile << situation << std::endl;
             pthread_mutex_unlock(&lock);
         }
     }
