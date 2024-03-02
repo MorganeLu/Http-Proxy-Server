@@ -1,7 +1,7 @@
 #include "proxyhttp.hpp"
 #include "cache.hpp"
 extern Logger logger;
-FIFOCache myCache(2);
+FIFOCache myCache(100);
 
 void ProxyHTTP::multiRun(){
     

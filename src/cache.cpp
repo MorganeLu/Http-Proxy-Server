@@ -1,4 +1,6 @@
 #include "cache.hpp"
+#include <mutex>
+std::mutex cacheMutex;
 extern Logger logger;
 
 bool FIFOCache::inCache(HttpRequest req){
@@ -10,6 +12,7 @@ bool FIFOCache::inCache(HttpRequest req){
     }
     
 void FIFOCache::removeCache(){
+    lock_guard<mutex> guard(cacheMutex);
     std::pair<std::string, HttpResponse> temp = FIFOQue.front();
     std::string toRemove = temp.first;
     // remove from both
@@ -35,7 +38,7 @@ int FIFOCache:: addCache(HttpRequest req, HttpResponse res){
         return -1;
     }
     
-
+    lock_guard<mutex> guard(cacheMutex);
     for(size_t i = 0;i<FIFOQue.size();i++){
         std::pair<std::string, HttpResponse> frontElement = FIFOQue.front();
         if(frontElement.first == req.getFirstLine()){
